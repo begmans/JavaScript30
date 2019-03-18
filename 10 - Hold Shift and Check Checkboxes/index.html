@@ -99,7 +99,7 @@
   </div>
 
 <script>
-  const checkboxes = document.querySelectorAll('input[type=checkbox]');
+  const checkboxes = document.querySelectorAll('.inbox input[type=checkbox]');
   const checkboxesAsArray = Array.from(checkboxes);
 
   function selectInterval(start, end) {
@@ -110,20 +110,23 @@
       .forEach(checkBoxToSelect => {checkBoxToSelect.checked = true})
   }
 
-  let start;
+  let lastChecked;
 
-  checkboxes.forEach( (checkbox, checkboxIndex, elements) => { 
+  function handleCheck(evt) {
 
-    checkbox.addEventListener('click', function(evt) {
-
-      if (!evt.shiftKey) {
-        start = checkboxIndex;
-      } else {
-        const end = checkboxIndex;
-        selectInterval(start, end);
+      if (evt.shiftKey && this.checked) {
+        let inBetween = false;
+        checkboxes.forEach(element => {
+          if (element === lastChecked || element === this) inBetween = !inBetween;
+          if (inBetween) {
+            element.checked = true;
+          }
+        });
       }
-    });
-});
+      lastChecked = this;
+    }
+
+  checkboxes.forEach( checkbox =>  checkbox.addEventListener('click', handleCheck));
 
 </script>
 </body>
